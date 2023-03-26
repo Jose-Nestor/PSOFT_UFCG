@@ -99,12 +99,10 @@ class VolatilLoteRepositoryTest {
 
     @Test
     @DisplayName("Encontrar um Lote com id = 1L")
-    void buscarLote(Long id){
+    void buscarLote(){
         driver.save(lote);
-        Long Id = 1L;
-        resultado = driver.find(Id);
 
-        assertEquals(resultado.getProduto(), produto);
+        assertEquals(driver.find(lote.getId()), lote);
     }
 
     @Test
@@ -125,8 +123,7 @@ class VolatilLoteRepositoryTest {
         driver.save(lote);
         driver.save(loteExtra);
 
-        resultado = (Lote) driver.findAll();
-
+        assertEquals(driver.findAll().size(), 2);
 
 
     }
