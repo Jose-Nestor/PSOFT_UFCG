@@ -30,7 +30,6 @@ class VolatilLoteRepositoryTest {
     Lote lote;
     Lote resultado;
     Produto produto;
-    List<Lote> lotes = new ArrayList<>();
 
 
 
@@ -134,8 +133,73 @@ class VolatilLoteRepositoryTest {
 
 
     @Test
-    @DisplayName("Atualizar Lote")
-    void atualizarLote() {
+    @DisplayName("Atualizar Lote com apenas um Lote na lista")
+    void atualizarLoteListaComUnicoLote() {
+        driver.save(lote);
+
+        produto = Produto.builder()
+                .id(1L)
+                .nome("Produto Topo")
+                .codigoBarra("987654321")
+                .fabricante("Fabricante Topo")
+                .preco(1250.36)
+                .build();
+        lote = Lote.builder()
+                .id(1L)
+                .numeroDeItens(10)
+                .produto(produto)
+                .build();
+
+        driver.update(lote);
+
+        assertEquals(produto.getNome(), "Produto Topo");
+        assertEquals(produto.getCodigoBarra(), "987654321");
+        assertEquals(produto.getFabricante(), "Fabricante Topo");
+        assertEquals(produto.getFabricante(), "Fabricante Topo");
+        assertEquals(produto.getPreco(), 1250.36);
+        assertEquals(lote.getNumeroDeItens(), 10);
+    }
+
+    @Test
+    @DisplayName("Atualizar Lote com dois lotes na lista")
+    void atualizarLoteListaComDoisLotes() {
+        driver.save(lote);
+
+        Produto produtoExtra = Produto.builder()
+                .id(2L)
+                .nome("Produto Extra")
+                .codigoBarra("987654321")
+                .fabricante("Fabricante Extra")
+                .preco(125.36)
+                .build();
+        Lote loteExtra = Lote.builder()
+                .id(2L)
+                .numeroDeItens(100)
+                .produto(produtoExtra)
+                .build();
+        driver.save(loteExtra);
+
+        produto = Produto.builder()
+                .id(1L)
+                .nome("Produto Topo")
+                .codigoBarra("987654321")
+                .fabricante("Fabricante Topo")
+                .preco(1250.36)
+                .build();
+        lote = Lote.builder()
+                .id(1L)
+                .numeroDeItens(10)
+                .produto(produto)
+                .build();
+
+        driver.update(lote);
+
+        assertEquals(produto.getNome(), "Produto Topo");
+        assertEquals(produto.getCodigoBarra(), "987654321");
+        assertEquals(produto.getFabricante(), "Fabricante Topo");
+        assertEquals(produto.getFabricante(), "Fabricante Topo");
+        assertEquals(produto.getPreco(), 1250.36);
+        assertEquals(lote.getNumeroDeItens(), 10);
     }
 
     @Test
@@ -144,6 +208,7 @@ class VolatilLoteRepositoryTest {
         driver.save(lote);
         driver.delete(lote);
 
+       // assertEquals(driver.find(1L), null);
         assertEquals(driver.findAll(), Collections.emptyList());
     }
 
