@@ -12,6 +12,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 
@@ -26,6 +30,8 @@ class VolatilLoteRepositoryTest {
     Lote lote;
     Lote resultado;
     Produto produto;
+    List<Lote> lotes = new ArrayList<>();
+
 
 
     @BeforeEach
@@ -93,16 +99,77 @@ class VolatilLoteRepositoryTest {
     }
 
     @Test
-    @DisplayName("Encontrar Lote com id 1L")
-    void BuscarProduto(Long id){
-        salvarPrimeiroLote();
+    @DisplayName("Encontrar um Lote com id = 1L")
+    void buscarLote(Long id){
+        driver.save(lote);
         Long Id = 1L;
         resultado = driver.find(Id);
 
         assertEquals(resultado.getProduto(), produto);
     }
 
+    @Test
+    @DisplayName("Buscar todos Lotes")
+    void buscarTodosLotes() {
+        Produto produtoExtra = Produto.builder()
+                .id(2L)
+                .nome("Produto Extra")
+                .codigoBarra("987654321")
+                .fabricante("Fabricante Extra")
+                .preco(125.36)
+                .build();
+        Lote loteExtra = Lote.builder()
+                .id(2L)
+                .numeroDeItens(100)
+                .produto(produtoExtra)
+                .build();
+        driver.save(lote);
+        driver.save(loteExtra);
 
+        resultado = (Lote) driver.findAll();
+
+
+
+    }
+
+
+    @Test
+    @DisplayName("Atualizar Lote")
+    void atualizarLote() {
+    }
+
+    @Test
+    @DisplayName("Apagar Lote")
+    void apagarLote() {
+        driver.save(lote);
+        driver.delete(lote);
+
+        assertEquals(driver.findAll(), Collections.emptyList());
+    }
+
+
+    @Test
+    @DisplayName("Apagar todos os Lotes")
+    void apagarTodosLotes() {
+        Produto produtoExtra = Produto.builder()
+                .id(2L)
+                .nome("Produto Extra")
+                .codigoBarra("987654321")
+                .fabricante("Fabricante Extra")
+                .preco(125.36)
+                .build();
+        Lote loteExtra = Lote.builder()
+                .id(2L)
+                .numeroDeItens(100)
+                .produto(produtoExtra)
+                .build();
+        driver.save(lote);
+        driver.save(loteExtra);
+        driver.deleteAll();
+
+        assertEquals(driver.findAll(), Collections.emptyList());
+
+    }
 
 
 }
